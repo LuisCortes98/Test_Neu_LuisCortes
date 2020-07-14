@@ -12,23 +12,30 @@ while 1:
 
     if inp == 1:
         dato = raw_input("Ingrese el pais: ")
-        Cursor.execute("SELECT [Name_Country], [Name_State], [Name_City], [Population_City] FROM [Test_Poblacion].[dbo].[Population_City] WHERE Name_Country = (?) order by Id_country, Id_state, Id_City", dato)
-        Table = Cursor.fetchall()
-        if Table != None:
-            for item in Table:
-                print ("Pais:" + item[0] + " | " + "Estado:" + item[1] + " | " + "Ciudad:" + item[2] + " | " + "Poblacion:" + item[3])
+        Cursor.execute("SELECT DISTINCT Name_State FROM [Test_Poblacion].[dbo].[Population_City] WHERE Name_Country = (?)", dato)
+        Table_State = Cursor.fetchall()
+        if Table_State != None:
+            print (dato + "\n")
+            for item in Table_State:
+                print ("   " + item[0])
                 print ("\n")
+                Cursor.execute("SELECT [Name_City], [Population_City] FROM [Test_Poblacion].[dbo].[Population_City] WHERE Name_State = (?) order by Id_country, Id_state, Id_City", item)
+                Table = Cursor.fetchall()
+                for item2 in Table:
+                    print ("       " + item2[0] +  " : "+ item2[1]+ "\n")
+                    print ("\n")
         else:
             print ("No se encuentra el pais")
         break
 
     if inp == 2:
         dato = raw_input("Ingrese el estado: ")
-        Cursor.execute("SELECT [Name_Country], [Name_State], [Name_City], [Population_City] FROM [Test_Poblacion].[dbo].[Population_City] WHERE Name_State = (?) order by Id_country, Id_state, Id_City", dato)
+        Cursor.execute("SELECT [Name_City], [Population_City] FROM [Test_Poblacion].[dbo].[Population_City] WHERE Name_State = (?)", dato)
         Table = Cursor.fetchall()
+        print (dato + '\n')
         if Table != None:
             for item in Table:
-                print ("Pais:" + item[0] + " | " + "Estado:" + item[1] + " | " + "Ciudad:" + item[2] + " | " + "Poblacion:" + item[3])
+                print ("   "+ item[0]+" : " + item[1])
                 print ("\n")
         else:
             print ("No se encuentra el estado")
@@ -36,12 +43,10 @@ while 1:
 
     if inp == 3:
         dato = raw_input("Ingrese la ciudad: ")
-        Cursor.execute("SELECT [Name_Country], [Name_State], [Name_City], [Population_City] FROM [Test_Poblacion].[dbo].[Population_City] WHERE Name_City = (?) order by Id_country, Id_state, Id_City", dato)
-        Table = Cursor.fetchall()
+        Cursor.execute("SELECT [Name_City], [Population_City] FROM [Test_Poblacion].[dbo].[Population_City] WHERE Name_City = (?)", dato)
+        Table = Cursor.fetchone()
         if Table != None:
-            for item in Table:
-                print ("Pais:" + item[0] + " | " + "Estado:" + item[1] + " | " + "Ciudad:" + item[2] + " | " + "Poblacion:" + item[3])
-                print ("\n")
+            print("   "+ Table[0]+" : " + Table[1])
         else:
             print ("No se encuentra la ciudad")
         break
